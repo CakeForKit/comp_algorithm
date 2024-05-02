@@ -1,0 +1,57 @@
+static double calc_ans(const PointsTable &table, double x) {
+    return newton_polinom(table.point_range(x, 3)).value_or(passer)(x);
+}
+
+static double bin_finder_of_root(const PointsTable &table) {
+#define EPS 1e-10
+#define TRIES_CNT 1e+10
+    auto closest_point = table.closest_to_zero_y();
+
+    auto del_point_from_table = [](const PointsTable &data, Point dpoint) -> PointsTable {
+        PointsTable ntable;
+        for ( auto point : data ) {
+            if (point != dpoint)
+                ntable.push_back(point);
+        }
+        return ntable;
+    };
+
+    auto nctable = del_point_from_table(table, closest_point);
+    auto less_closest_point = nctable.closest_to_zero_y();
+
+    double step = fabs(less_closest_point.x - closest_point.x) / 2;
+
+    std::size_t tries = 0;
+    while (fabs(closest_point.y) > EPS) {
+        if (tries++ == TRIES_CNT) goto time_error;
+
+        auto new_point_xs = std::pair(closest_point.x + step, closest_point.x - step);
+        auto new_point_ys = std::pair(calc_ans(table, new_point_xs.first), 
+                                      calc_ans(table, new_point_xs.second));
+
+        bool chooser = fabs(new_point_ys.first) < fabs(new_point_ys.second);
+        Point tmp_point = {
+            .x = chooser ? new_point_xs.first : new_point_xs.second,
+            .y = chooser ? new_point_ys.first : new_point_ys.second,
+            .dy = std::vector<double>()
+        };
+
+        bool to_save = fabs(tmp_point.y) > fabs(closest_point.y);
+        step = to_save ? step / 2 : step; 
+        closest_point = to_save ? closest_point : tmp_point;
+    }
+
+    return closest_point.x;
+    time_error: return std::numeric_limits<double>::infinity();
+#undef TRIES_CNT
+#undef EPS
+}
+
+
+
+bool chooser = fabs(new_point_ys.first) < fabs(new_point_ys.second);
+Point tmp_point = {
+    .x = chooser ? new_point_xs.first : new_point_xs.second,
+    .y = chooser ? new_point_ys.first : new_point_ys.second,
+    .dy = std::vector<double>()
+};
