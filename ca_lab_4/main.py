@@ -1,4 +1,4 @@
-from in_output import choose_act, input_filename, MENU, print_table_data, input_coord
+from in_output import choose_act, input_filename, MENU, print_table_data, input_coord, print_table_data_with_err
 from work_data import read_data, change_weight, change_weight_to_same, input_change_weight
 from approximate import least_squares_method_xy, input_n, least_squares_method_xyz
 from graphic import draw_graphic_xy, draw_graphic_xyz, draw_graphic_diffur
@@ -50,6 +50,15 @@ if __name__ == '__main__':
             n = input_n()
             if mode == XY:
                 func = least_squares_method_xy(data, n, printing=True)
+                # ERROR
+                sum_err = 0
+                for p in data:
+                    er = p.w * (func(p.x) - p.y) ** 2
+                    p.err = er
+                    sum_err += er
+                print_table_data_with_err(data, mode)
+                print(f'SUM ERR = {sum_err:.5f}')
+                #
                 if act == 6:
                     x = input_coord(mode)
                     y = func(x)
@@ -61,12 +70,23 @@ if __name__ == '__main__':
                     draw_graphic_xy(data, func, func1)
             elif mode == XYZ:
                 func = least_squares_method_xyz(data, n, printing=True)
+                # ERROR
+                sum_err = 0
+                for p in data:
+                    er = p.w * (func(p.x, p.y) - p.z) ** 2
+                    p.err = er
+                    sum_err += er
+                print_table_data_with_err(data, mode)
+                print(f'SUM ERR = {sum_err:.5f}')
+                #
                 if act == 6:
                     x, y = input_coord(mode)
                     z = func(x, y)
                     print(f'z(x, y) = z({x}, {y}) = {z:.5f}')
                 else:
                     draw_graphic_xyz(data, func)
+            print(mode)
+
 
 
 

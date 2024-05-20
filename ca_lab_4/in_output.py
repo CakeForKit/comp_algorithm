@@ -103,3 +103,19 @@ def input_coord(mode):
             except Exception:
                 print('ERROR: введите float float')
         return x, y
+
+
+def print_table_data_with_err(data: list[Point], mode):
+    tab = PrettyTable()
+    if mode == XY:
+        tab.field_names = ['x', 'y', 'weight', 'err']
+        for i in range(len(data)):
+            p = data[i]
+            tab.add_row([p.x, f'{p.y:.5f}', p.w, f'{p.err:.5f}'])
+        print(tab)
+    else:
+        tab.field_names = ['z', 'x', 'y', 'weight', 'err']
+        for i in range(len(data)):
+            p = data[i]
+            tab.add_row([p.z, p.x, f'{p.y:.5f}', p.w, f'{p.err:.5f}'])
+        print(tab)

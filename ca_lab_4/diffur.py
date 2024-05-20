@@ -76,6 +76,10 @@ def least_squares_method_diffur(x_values, koeff_func_c, u, printing=False):
         # print(c_values)
         return u[0](x) + sum([c_values[i] * u[i + 1](x) for i in range(m - 1)])
 
+    # for x in x_values:
+    #
+    # print('ERROR = ')
+
     return f, c_values
 
 

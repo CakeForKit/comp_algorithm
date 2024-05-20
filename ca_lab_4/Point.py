@@ -7,6 +7,7 @@ class Point:
         self.w = weight
         self.x = x
         self.y = y
+        self.err = -1
         if z is None:
             self.type = XY
             self.z = 0

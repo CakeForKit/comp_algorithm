@@ -1,7 +1,7 @@
 from Point import *
 from in_output import print_slau
 from gauss import gauss
-
+import  math as m
 
 def input_n():
     good = False
@@ -39,6 +39,10 @@ def least_squares_method_xy(data, n, printing=True):  # -> a_values
             print(f'a{i} = {a_values[i]:.5f}')
     print()
 
+    # print('ERROR=')
+    # for p in data:
+
+
     def f(x):
         res = 0
         for i in range(len(a_values)):
@@ -65,6 +69,11 @@ def get_slau_xyz(data, n):
 
 
 def least_squares_method_xyz(data, n, printing=True):  # -> a_values
+    # Change t = exp(y)
+    for p in data:
+        p.y = m.exp(p.y)
+
+
     slau = get_slau_xyz(data, n)
     if printing:
         print_slau(slau)
