@@ -104,23 +104,35 @@ def count_polynom(x_values, x, index_xi, abcd_coefs):
     return y
 
 
-# data = [[x, y], ...]
-def spline(data, search_x, beg=0, end=0):
-    x_values = list()
-    y_values = list()
-    for i in range(len(data)):
-        x_values.append(data[i][0])
-        y_values.append(data[i][1])
+def spline_f_x(x_values, y_values, beg=0, end=0):
 
     abcd_coef = calc_abcd_coefs(x_values, y_values, beg, end)
     # with open('abcd1.txt', 'w') as f:
     #     f.write(f'{abcd_coef}\n')
     # print(f'abcd_coef - {abcd_coef}')
 
-    index_xi = find_index_xi(x_values, search_x)
-    # print(f'index_xi = {index_xi}')
+    def f(x):
+        index_xi = find_index_xi(x_values, x)
+        # print(f'index_xi = {index_xi}')
 
-    y = count_polynom(x_values, search_x, index_xi, abcd_coef)
-    # print(f'y = {y}')
+        y = count_polynom(x_values, x, index_xi, abcd_coef)
+        # print(f'y = {y}')
+        return y
 
-    return y
+    return f
+
+
+def spline_f_xy_(x_vals, y_vals, z_vals):
+    funcs_ZOX = list()
+    for i in range(len(y_vals)):
+        funcs_ZOX.append(spline_f_x(x_vals, z_vals[i]))
+
+    def f(x, y):
+        x0_z_vals = list()
+        for i in range(len(y_vals)):
+            x0_z_vals.append(funcs_ZOX[i](x))
+        return spline_f_x(y_vals, x0_z_vals)(y)
+
+    return f
+
+
