@@ -66,7 +66,7 @@ if __name__ == '__main__':
     use_functmp = spline_f_xy_(x_vals, y_vals, z_vals)
     use_func = lambda x, y: exp(use_functmp(x, y))
 
-    intrgral2 = get_integral(use_func, 10, 10)
+    intrgral2 = get_integral(use_func, 30, 10)
     ##
 
     print(f'integral2 = {intrgral2}')
